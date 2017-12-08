@@ -7,10 +7,10 @@ output = []
 
 def build():
 	"""Creates the map using the declared height and width."""
-	for n in range(MAPWIDTH):
+	for n in range(MAPHEIGHT):
 		output.append([])
 	for x in output:
-		for y in range(MAPHEIGHT):
+		for y in range(MAPWIDTH):
 			x.append(0)
 
 
@@ -19,8 +19,8 @@ def walk(island=True):
 		After each step, the walker increments the value of the space it is on by 1."""
 	xcoordinate = int(MAPWIDTH/2)
 	ycoordinate = int(MAPHEIGHT/2)
-	output[xcoordinate][ycoordinate] += 1
-	for n in range(MAPWIDTH*MAPHEIGHT*2):
+	output[ycoordinate][xcoordinate] += 1
+	for n in range(MAPWIDTH*MAPHEIGHT*2):  # Total number of steps is equal to area*2, so the final map has an average of 2 steps per 'tile'.
 		direction = randint(1, 4)
 		if direction == 1:
 			ycoordinate += 1
@@ -46,7 +46,7 @@ def walk(island=True):
 				ycoordinate = randint(int(MAPHEIGHT/2), int(3*MAPHEIGHT/4))
 			else:
 				pass
-		output[xcoordinate][ycoordinate] += 1
+		output[ycoordinate][xcoordinate] += 1
 
 
 build()
