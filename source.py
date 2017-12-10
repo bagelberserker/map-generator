@@ -2,6 +2,7 @@ from random import randint
 
 MAPWIDTH = 25
 MAPHEIGHT = 25
+ISISLAND = True
 output = []
 
 
@@ -14,7 +15,7 @@ def build():
 			x.append(0)
 
 
-def walk(island=True):
+def walk():
 	"""Puts a 'walker' at the center of the map, then moves the walker 1 step in a random cardinal direction.
 		After each step, the walker increments the value of the space it is on by 1."""
 	xcoordinate = int(MAPWIDTH/2)
@@ -30,7 +31,7 @@ def walk(island=True):
 			ycoordinate -= 1
 		else:
 			xcoordinate -= 1
-		if island:  # Simulates a volcanic island. When the walker would reach the edge, it's location is reset to the starting point.
+		if ISISLAND:  # Simulates a volcanic island. When the walker would reach the edge, it's location is reset to the starting point.
   			if xcoordinate < 1 or xcoordinate >= (MAPWIDTH-1) or ycoordinate < 1 or ycoordinate >= (MAPHEIGHT-1):  # Looks clunky. Surely there's a shortcut/cleaner way?
 				xcoordinate, ycoordinate = int(MAPWIDTH/2), int(MAPHEIGHT/2)
 			else:
@@ -51,5 +52,12 @@ def walk(island=True):
 
 build()
 walk()
-for i in output:  # Printed this way for ease of data usage during testing.
-	print(i)
+for i in range(MAPHEIGHT):  # Printed this way for ease of data usage during testing.
+	row = ""
+	for j in range(MAPWIDTH):
+		row += str(output[i][j])
+		if j < MAPWIDTH - 1:
+			row += "	"
+		else:
+			pass
+	print(row)
