@@ -95,7 +95,8 @@ def no_lakes(finished_map):
 
 
 def save_to_image(finished_map, location, name):
-	"""Saves the map as a .png file."""
+	"""Saves the map as a .png file.
+	Requires the Pillow python module."""
 	WIDTH = len(finished_map[0])
 	HEIGHT = len(finished_map)
 	HIGHPOINT = max([max(y) for y in finished_map])
