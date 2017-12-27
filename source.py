@@ -75,22 +75,23 @@ def no_lakes(finished_map):
 	for x in range(len(output[0])):
 		output[0][x] = 0
 		output[-1][x] = 0
-	for y in range(1, len(output)-1):
-		for x in range(1, len(output[y])-1):
-			if 0 in [output[y+1][x], output[y-1][x], output[y][x+1], output[y][x-1]] and output[y][x] == 1:
-				output[y][x] = 0
-	for y in range(1, len(output)-1):
-		for x in range(1, len(output[y])-1)[::-1]:
-			if 0 in [output[y+1][x], output[y-1][x], output[y][x+1], output[y][x-1]] and output[y][x] == 1:
-				output[y][x] = 0
-	for y in range(1, len(output)-1)[::-1]:
-		for x in range(1, len(output[y])-1):
-			if 0 in [output[y+1][x], output[y-1][x], output[y][x+1], output[y][x-1]] and output[y][x] == 1:
-				output[y][x] = 0
-	for y in range(1, len(output)-1)[::-1]:
-		for x in range(1, len(output[y])-1)[::-1]:
-			if 0 in [output[y+1][x], output[y-1][x], output[y][x+1], output[y][x-1]] and output[y][x] == 1:
-				output[y][x] = 0
+	for n in range(4):
+		for y in range(1, len(output)-1):
+			for x in range(1, len(output[y])-1):
+				if 0 in [output[y+1][x], output[y-1][x], output[y][x+1], output[y][x-1]] and output[y][x] == 1:
+					output[y][x] = 0
+		for x in range(1, len(output[0])-1)[::-1]:
+			for y in range(1, len(output)-1):
+				if 0 in [output[y+1][x], output[y-1][x], output[y][x+1], output[y][x-1]] and output[y][x] == 1:
+					output[y][x] = 0
+		for y in range(1, len(output)-1)[::-1]:
+			for x in range(1, len(output[y])-1)[::-1]:
+				if 0 in [output[y+1][x], output[y-1][x], output[y][x+1], output[y][x-1]] and output[y][x] == 1:
+					output[y][x] = 0
+		for x in range(1, len(output[0])-1):
+			for y in range(1, len(output)-1)[::-1]:
+				if 0 in [output[y+1][x], output[y-1][x], output[y][x+1], output[y][x-1]] and output[y][x] == 1:
+					output[y][x] = 0
 	return output
 
 
@@ -133,4 +134,4 @@ def post_to_screen(finished_map):
 
 
 # All the magic happens on this next line:
-save_to_image(no_lakes(walk(build(MAPWIDTH, MAPHEIGHT))), OUTPUT_LOCATION, OUTPUT_FILE_NAME)
+save_to_image(no_lakes(blur(walk(build(MAPWIDTH, MAPHEIGHT)))), OUTPUT_LOCATION, OUTPUT_FILE_NAME)
