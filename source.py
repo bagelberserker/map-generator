@@ -3,8 +3,8 @@ from PIL import Image  # Pillow module
 
 
 # If you want to run the program with your own parameters and filepath, I made constants for that.
-MAPWIDTH = 250
-MAPHEIGHT = 200
+MAPWIDTH = 750
+MAPHEIGHT = 500
 OUTPUT_LOCATION = "C:\\Users\\My Dell\\Desktop\\"
 OUTPUT_FILE_NAME = "output"
 MAPTYPE = "globe"  # Viable options are "island", "globe", and "torus".
@@ -13,9 +13,9 @@ MAPTYPE = "globe"  # Viable options are "island", "globe", and "torus".
 def build(width, height):
 	"""Creates the map using the declared height and width."""
 	output = []
-	for y in range(height):
+	for y in range(height+1):
 		row = []
-		for x in range(width):
+		for x in range(width+1):
 				row.append(0)
 		output.append(row)
 	return output
@@ -133,6 +133,9 @@ def no_lakes(finished_map):
 def save_to_image(finished_map, location, name):
 	"""Saves the map as a .png file.
 	Requires the Pillow python module."""
+	finished_map = finished_map[1:-1]
+	for n in range(len(finished_map)):
+		finished_map[n] = finished_map[n][1:-1]
 	WIDTH = len(finished_map[0])
 	HEIGHT = len(finished_map)
 	HIGHPOINT = max([max(y) for y in finished_map])
@@ -157,6 +160,9 @@ def save_to_image(finished_map, location, name):
 
 
 def post_to_screen(finished_map):
+	finished_map = finished_map[1:-1]
+	for n in range(len(finished_map)):
+		finished_map[n] = finished_map[n][1:-1]
 	for y in range(len(finished_map)):
 		row = ""
 		for x in range(len(finished_map[y])):
