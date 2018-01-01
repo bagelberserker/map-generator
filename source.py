@@ -7,6 +7,7 @@ MAPWIDTH = 250
 MAPHEIGHT = 200
 OUTPUT_LOCATION = "C:\\Users\\My Dell\\Desktop\\"
 OUTPUT_FILE_NAME = "output"
+MAPTYPE = "globe"  # Viable options are "island", "globe", and "torus".
 
 
 def build(width, height):
@@ -20,12 +21,18 @@ def build(width, height):
 	return output
 
 
-def walk(empty_map):
+def walk(empty_map, surface="island"):
 	"""Puts a 'walker' at the center of the map, then moves the walker 1 step in a random cardinal direction.
 		After each step, the walker increments the value of the space it is on by 1."""
 	output = empty_map
 	HEIGHT = len(empty_map)
 	WIDTH = len(empty_map[0])
+	if surface.lower() in ["torus", "donut", "mug"]:
+		TOPOLOGY = "torus"
+	elif surface.lower() in ["globe", "sphere"]:
+		TOPOLOGY = "globe"
+	else:
+		TOPOLOGY = "island"
 	xcoordinate = int(WIDTH/2)
 	ycoordinate = int(HEIGHT/2)
 	for n in range(WIDTH*HEIGHT*2):  # Total number of steps is equal to area*2, so the final map has an average of 2 steps per 'tile'.
@@ -38,8 +45,36 @@ def walk(empty_map):
 			ycoordinate -= 1
 		else:
 			xcoordinate -= 1
-		if xcoordinate < 1 or xcoordinate >= (WIDTH-1) or ycoordinate < 1 or ycoordinate >= (HEIGHT-1):  # Looks clunky. Surely there's a shortcut/cleaner way?
-			xcoordinate, ycoordinate = int(WIDTH/2), int(HEIGHT/2)
+		if xcoordinate < 1:
+			if TOPOLOGY != "island":
+				xcoordinate = WIDTH-1
+			else:
+				xcoordinate = int(WIDTH/2)
+				ycoordinate = int(HEIGHT/2)
+		elif xcoordinate >= (WIDTH-1):
+			if TOPOLOGY != "island":
+				xcoordinate = 1
+			else:
+				xcoordinate = int(WIDTH/2)
+				ycoordinate = int(HEIGHT/2)
+		elif ycoordinate < 1:
+			if TOPOLOGY == "torus":
+				ycoordinate = HEIGHT-1
+			elif TOPOLOGY == "globe":
+				ycoordinate = 1
+				xcoordinate = WIDTH - xcoordinate
+			else:
+				xcoordinate = int(WIDTH/2)
+				ycoordinate = int(HEIGHT/2)
+		elif ycoordinate >= (HEIGHT-1):
+			if TOPOLOGY == "torus":
+				ycoordinate = 1
+			elif TOPOLOGY == "globe":
+				ycoordinate = HEIGHT-1
+				xcoordinate = WIDTH - xcoordinate
+			else:
+				xcoordinate = int(WIDTH/2)
+				ycoordinate = int(HEIGHT/2)
 		else:
 			pass
 		output[ycoordinate][xcoordinate] += 1
@@ -47,7 +82,8 @@ def walk(empty_map):
 
 
 def blur(finished_map):
-	"""An optional filter to reduce 'spikeyness' on the map."""
+	"""An optional filter to reduce 'spikeyness' on the map.
+		Also clears out small isthmi, turning them into islands."""
 	output = []
 	for y in range(len(finished_map)):
 		row = []
@@ -61,8 +97,7 @@ def blur(finished_map):
 
 
 def no_lakes(finished_map):
-	"""Attempts to remove inland bodies of water.
-	I realized I needed this after making maps of much larger scales."""
+	"""Attempts to remove inland bodies of water."""
 	output = []
 	for y in range(len(finished_map)):
 		row = []
@@ -134,4 +169,4 @@ def post_to_screen(finished_map):
 
 
 # All the magic happens on this next line:
-save_to_image(no_lakes(blur(walk(build(MAPWIDTH, MAPHEIGHT)))), OUTPUT_LOCATION, OUTPUT_FILE_NAME)
+save_to_image(no_lakes(blur(walk(build(MAPWIDTH, MAPHEIGHT), MAPTYPE))), OUTPUT_LOCATION, OUTPUT_FILE_NAME)
