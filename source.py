@@ -3,8 +3,8 @@ from PIL import Image  # Pillow module
 
 
 # If you want to run the program with your own parameters and filepath, I made constants for that.
-MAPWIDTH = 750
-MAPHEIGHT = 500
+MAPWIDTH = 600
+MAPHEIGHT = 400
 OUTPUT_LOCATION = "C:\\Users\\My Dell\\Desktop\\"
 OUTPUT_FILE_NAME = "output"
 MAPTYPE = "globe"  # Viable options are "island", "globe", and "torus".
@@ -33,51 +33,57 @@ def walk(empty_map, surface="island"):
 		TOPOLOGY = "globe"
 	else:
 		TOPOLOGY = "island"
-	xcoordinate = int(WIDTH/2)
-	ycoordinate = int(HEIGHT/2)
+	x_coordinate = int(WIDTH/2)
+	y_coordinate = int(HEIGHT/2)
 	for n in range(WIDTH*HEIGHT*2):  # Total number of steps is equal to area*2, so the final map has an average of 2 steps per 'tile'.
 		direction = randint(1, 4)
 		if direction == 1:
-			ycoordinate += 1
+			y_coordinate += 1
 		elif direction == 2:
-			xcoordinate += 1
+			x_coordinate += 1
 		elif direction == 3:
-			ycoordinate -= 1
+			y_coordinate -= 1
 		else:
-			xcoordinate -= 1
-		if xcoordinate < 1:
-			if TOPOLOGY != "island":
-				xcoordinate = WIDTH-1
+			x_coordinate -= 1
+		if x_coordinate < 1:
+			if TOPOLOGY in ["torus", "globe"]:
+				x_coordinate = WIDTH-2
 			else:
-				xcoordinate = int(WIDTH/2)
-				ycoordinate = int(HEIGHT/2)
-		elif xcoordinate >= (WIDTH-1):
-			if TOPOLOGY != "island":
-				xcoordinate = 1
-			else:
-				xcoordinate = int(WIDTH/2)
-				ycoordinate = int(HEIGHT/2)
-		elif ycoordinate < 1:
-			if TOPOLOGY == "torus":
-				ycoordinate = HEIGHT-1
-			elif TOPOLOGY == "globe":
-				ycoordinate = 1
-				xcoordinate = WIDTH - xcoordinate
-			else:
-				xcoordinate = int(WIDTH/2)
-				ycoordinate = int(HEIGHT/2)
-		elif ycoordinate >= (HEIGHT-1):
-			if TOPOLOGY == "torus":
-				ycoordinate = 1
-			elif TOPOLOGY == "globe":
-				ycoordinate = HEIGHT-1
-				xcoordinate = WIDTH - xcoordinate
-			else:
-				xcoordinate = int(WIDTH/2)
-				ycoordinate = int(HEIGHT/2)
+				x_coordinate = int(WIDTH/2)
+				y_coordinate = int(HEIGHT/2)
 		else:
 			pass
-		output[ycoordinate][xcoordinate] += 1
+		if x_coordinate > WIDTH-2:
+			if TOPOLOGY in ["torus", "globe"]:
+				x_coordinate = 1
+			else:
+				x_coordinate = int(WIDTH/2)
+				y_coordinate = int(HEIGHT/2)
+		else:
+			pass
+		if y_coordinate < 1:
+			if TOPOLOGY == "globe":
+				y_coordinate = 1
+				x_coordinate = WIDTH-x_coordinate
+			elif TOPOLOGY == "torus":
+				y_coordinate = HEIGHT-2
+			else:
+				x_coordinate = int(WIDTH / 2)
+				y_coordinate = int(HEIGHT / 2)
+		else:
+			pass
+		if y_coordinate > HEIGHT-2:
+			if TOPOLOGY == "globe":
+				y_coordinate = HEIGHT-2
+				x_coordinate = WIDTH-x_coordinate
+			elif TOPOLOGY == "torus":
+				y_coordinate = 1
+			else:
+				x_coordinate = int(WIDTH / 2)
+				y_coordinate = int(HEIGHT / 2)
+		else:
+			pass
+		output[y_coordinate][x_coordinate] += 1
 	return output
 
 
