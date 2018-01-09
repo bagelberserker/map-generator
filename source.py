@@ -7,7 +7,11 @@ MAPWIDTH = 600
 MAPHEIGHT = 400
 OUTPUT_LOCATION = "C:\\Users\\My Dell\\Desktop\\"
 OUTPUT_FILE_NAME = "output"
-MAPTYPE = "globe"  # Viable options are "island", "globe", and "torus".
+MAPTYPE = "island"  # Viable options are "island", "globe", and "torus".
+
+"""
+RIVERS = 50  # Work in progress
+"""
 
 
 def build(width, height):
@@ -134,6 +138,95 @@ def no_lakes(finished_map):
 				if 0 in [output[y+1][x], output[y-1][x], output[y][x+1], output[y][x-1]] and output[y][x] == 1:
 					output[y][x] = 0
 	return output
+
+
+# TODO: Get this working.
+"""
+def add_rivers(finished_map, number_of_rivers=1, surface="island"):
+	output = finished_map
+	river_layer = []
+	HEIGHT = len(finished_map)
+	WIDTH = len(finished_map[0])
+	if surface.lower() in ["torus", "donut", "mug"]:
+		TOPOLOGY = "torus"
+	elif surface.lower() in ["globe", "sphere"]:
+		TOPOLOGY = "globe"
+	else:
+		TOPOLOGY = "island"
+	for i in range(HEIGHT):
+		row = []
+		for j in range(WIDTH):
+			row.append(1)
+		river_layer.append(row)
+	for i in range(number_of_rivers):
+		x_coordinate = randint(1, WIDTH-2)
+		y_coordinate = randint(1, HEIGHT-2)
+		while finished_map[y_coordinate][x_coordinate] == 0:
+			x_coordinate = randint(1, WIDTH-2)
+			y_coordinate = randint(1, HEIGHT-2)
+		while finished_map[y_coordinate][x_coordinate] != 0:
+			river_layer[y_coordinate][x_coordinate] *= 0
+			neighbors = [
+				output[y_coordinate-1][x_coordinate]/((10*river_layer[y_coordinate-1][x_coordinate])+1),
+				output[y_coordinate+1][x_coordinate]/((10*river_layer[y_coordinate+1][x_coordinate])+1),
+				output[y_coordinate][x_coordinate-1]/((10*river_layer[y_coordinate][x_coordinate-1])+1),
+				output[y_coordinate][x_coordinate+1]/((10*river_layer[y_coordinate][x_coordinate+1])+1),
+			]
+			if finished_map[y_coordinate][x_coordinate] >= min(neighbors):
+				if neighbors[0] == min(neighbors):
+					y_coordinate -= 1
+				elif neighbors[1] == min(neighbors):
+					y_coordinate += 1
+				elif neighbors[2] == min(neighbors):
+					x_coordinate -= 1
+				else:
+					x_coordinate += 1
+			else:
+				break
+# Begin map edge checking
+			if x_coordinate < 1:
+				if TOPOLOGY in ["torus", "globe"]:
+					x_coordinate = WIDTH-2
+				else:
+					x_coordinate = int(WIDTH/2)
+					y_coordinate = int(HEIGHT/2)
+			else:
+				pass
+			if x_coordinate > WIDTH-2:
+				if TOPOLOGY in ["torus", "globe"]:
+					x_coordinate = 1
+				else:
+					x_coordinate = int(WIDTH/2)
+					y_coordinate = int(HEIGHT/2)
+			else:
+				pass
+			if y_coordinate < 1:
+				if TOPOLOGY == "globe":
+					y_coordinate = 1
+					x_coordinate = WIDTH - x_coordinate
+				elif TOPOLOGY == "torus":
+					y_coordinate = HEIGHT-2
+				else:
+					x_coordinate = int(WIDTH/2)
+					y_coordinate = int(HEIGHT/2)
+			else:
+				pass
+			if y_coordinate > HEIGHT-2:
+				if TOPOLOGY == "globe":
+					y_coordinate = HEIGHT-2
+					x_coordinate = WIDTH-x_coordinate
+				elif TOPOLOGY == "torus":
+					y_coordinate = 1
+				else:
+					x_coordinate = int(WIDTH/2)
+					y_coordinate = int(HEIGHT/2)
+			else:
+				pass
+	for i in range(HEIGHT):
+		for j in range(WIDTH):
+			output[i][j] *= river_layer[i][j]
+	return output
+"""
 
 
 def save_to_image(finished_map, location, name):
