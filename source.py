@@ -207,4 +207,15 @@ DESIRED_LOCATION = "C:\\Users\\My Dell\\Desktop\\"
 DESIRED_FILENAME = "map"
 MAPTYPE = "island"  # Viable options are "island", "globe", and "torus".
 
-save_to_image(delake(blur(walk(build(MAPWIDTH, MAPHEIGHT), MAPTYPE))), DESIRED_LOCATION, DESIRED_FILENAME)
+save_to_image(
+    delake(
+        blur(
+            walk(
+                build(MAPWIDTH, MAPHEIGHT), 
+                MAPTYPE
+            )
+        )
+    ), 
+    DESIRED_LOCATION, 
+    DESIRED_FILENAME
+)
