@@ -3,14 +3,8 @@ from PIL import Image
 
 
 def build(width, height):
-    """Creates the map using the declared height and width."""
-    empty_map = []
-    for y in range(height + 2):
-        row = []
-        for x in range(width + 2):
-                row.append(0)
-        empty_map.append(row)
-    return empty_map
+    """Creates a grid of 0's using the declared height and width."""
+    return [[0 for y in range(height +2)] for x in range(width +2)]
 
 
 def walk(empty_map, surface="island"):
